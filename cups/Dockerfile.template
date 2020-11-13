@@ -39,5 +39,17 @@ COPY cupsd.conf /etc/cups/cupsd.conf
 # Link DBUS file where hp-setup expects it
 RUN ln -s /host/run/dbus /var/run/dbus
 
+# Create admin user
+RUN useradd -ms /bin/bash printer
+RUN yes nachbar01 | passwd printer
+
+# add user to printer group
+RUN usermod -a -G lpadmin printer
+RUN usermod -a -G sys printer
+RUN usermod -a -G lpadmin printer
+
+# remove default
+RUN rm /etc/cupsd/cupsd.conf.0
+
 #Run Script
 CMD ["bash", "run.sh"]
